@@ -1,1 +1,2 @@
 # Auratix
+my personal website
