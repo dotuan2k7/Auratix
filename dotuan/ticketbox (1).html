@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+       (function(){
+          emailjs.init("sdIpjrLhd9jRBxDAW");
+       })();
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Hub - Auth Central</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="main-container">
+        <header class="top-nav">
+            <div class="logo"><i class="fa-solid fa-microphone-lines"></i> EVENT HUB</div>
+            <div class="nav-links">HỖ TRỢ</div>
+            <button class="btn-admin"><i class="fa-solid fa-lock"></i> ADMIN PANEL</button>
+        </header>
+
+        <h1 class="page-title">AUTH CENTRAL</h1>
+
+        <div class="auth-wrapper">
+            <div class="auth-card signup-card">
+                <p class="step">1. ĐĂNG KÝ (SIGN UP)</p>
+                <h2>TẠO TÀI KHOẢN MỚI</h2>
+                <form id="register-form">
+                    <div class="input-group">
+                        <input type="text" placeholder="HỌ VÀ TÊN:" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="email" placeholder="EMAIL:" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="tel" placeholder="SỐ ĐIỆN THOẠI:" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" placeholder="MẬT KHẨU:" required id="reg-pass">
+                        <i class="fa-solid fa-eye-slash toggle-password" data-target="reg-pass"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" placeholder="XÁC NHẬN MẬT KHẨU:" required id="reg-pass-confirm">
+                        <i class="fa-solid fa-eye-slash toggle-password" data-target="reg-pass-confirm"></i>
+                    </div>
+                    <button type="submit" class="btn-primary btn-teal">ĐĂNG KÝ NGAY</button>
+                </form>
+            </div>
+
+            <div class="divider-vertical"></div>
+
+            <div class="auth-card login-card">
+                <p class="step">2. ĐĂNG NHẬP (LOG IN)</p>
+                <h2>ĐĂNG NHẬP VÀO<br>EVENT HUB</h2>
+                <form id="login-form">
+                    <div class="input-group">
+                        <input type="email" placeholder="EMAIL:" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" placeholder="MẬT KHẨU:" required id="login-pass">
+                        <i class="fa-solid fa-eye-slash toggle-password" data-target="login-pass"></i>
+                    </div>
+                    <div class="forgot-password">
+                        <a href="#">QUÊN MẬT KHẨU?</a>
+                    </div>
+                    <button type="submit" class="btn-primary btn-orange">ĐĂNG NHẬP</button>
+                </form>
+
+                <div class="quick-login">
+                    <p><span>ĐĂNG NHẬP NHANH BẰNG</span></p>
+                    <div class="social-buttons">
+                        <button id="btn-google" class="btn-social google"><i class="fa-brands fa-google"></i></button>
+                        <button id="btn-github" class="btn-social github"><i class="fa-brands fa-github"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
