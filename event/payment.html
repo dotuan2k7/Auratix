@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Thanh toán QR - EVENT HUB</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: { 900: '#0f172a', 800: '#1e293b' },
+                        teal: { 500: '#14b8a6', 600: '#0d9488', 50: '#f0fdfa' },
+                        orange: { 500: '#f97316', 600: '#ea580c' },
+                        surface: "#f8fafc",
+                    },
+                    fontFamily: {
+                        headline: ["Plus Jakarta Sans", "sans-serif"],
+                        body: ["Inter", "sans-serif"],
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-surface font-body text-slate-800 antialiased min-h-screen">
+
+    <header class="fixed top-0 w-full z-50 bg-navy-900 shadow-lg">
+        <div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+            <div class="flex items-center gap-3 text-white">
+                <span class="material-symbols-outlined text-teal-500 text-3xl" style="font-variation-settings: 'FILL' 1;">graphic_eq</span>
+                <div class="text-2xl font-black tracking-wider font-headline text-white">EVENT HUB</div>
+            </div>
+            <a class="text-slate-300 hover:text-white flex items-center gap-2 transition-colors" href="index.html">
+                <span class="material-symbols-outlined text-xl">close</span>
+                <span class="text-sm font-semibold uppercase tracking-wider">Hủy thanh toán</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="pt-28 pb-12 px-6 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <section class="lg:col-span-7 flex flex-col gap-8">
+                <div class="space-y-2">
+                    <h1 class="text-4xl font-extrabold tracking-tight font-headline text-navy-900">Quét mã để thanh toán</h1>
+                    <div class="flex items-center gap-2 text-red-600 font-semibold py-2 px-4 bg-red-50 rounded-full w-fit border border-red-100">
+                        <span class="material-symbols-outlined text-sm">schedule</span>
+                        <span id="countdownTimer" class="text-sm tracking-wide">Mã QR sẽ hết hạn sau: 01:00</span>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center gap-6">
+                    <div class="relative p-4 bg-white rounded-3xl shadow-sm border border-slate-100">
+                        <img id="dynamicQR" alt="QR Code Payment" class="w-64 h-64 object-contain" src=""/>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="bg-white p-2 rounded-lg shadow-md border border-slate-200">
+                                <span class="material-symbols-outlined text-teal-500 font-bold">bolt</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <p class="text-slate-500 font-medium">Mở ứng dụng Ngân hàng hoặc Ví điện tử của bạn để quét mã</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-[2rem] p-8 grid grid-cols-1 md:grid-cols-2 gap-8 border border-slate-100">
+                    <div class="space-y-1">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Ngân hàng</span>
+                        <p class="text-lg font-bold text-navy-900">Techcombank</p>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Số tài khoản</span>
+                        <div class="flex items-center gap-2">
+                            <p class="text-lg font-bold text-navy-900">19034567891011</p>
+                            <button class="text-teal-600 hover:bg-teal-50 p-1.5 rounded-md transition-colors" onclick="navigator.clipboard.writeText('19034567891011')">
+                                <span class="material-symbols-outlined text-sm">content_copy</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Chủ tài khoản</span>
+                        <p class="text-lg font-bold text-navy-900 uppercase">Cong Ty Co Phan Event Hub</p>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Nội dung chuyển khoản</span>
+                        <div class="flex items-center gap-2">
+                            <p id="displayMsg" class="text-lg font-bold text-teal-600">EH-XXXX-2024</p>
+                            <button class="text-teal-600 hover:bg-teal-50 p-1.5 rounded-md transition-colors" onclick="navigator.clipboard.writeText(document.getElementById('displayMsg').textContent)">
+                                <span class="material-symbols-outlined text-sm">content_copy</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="lg:col-span-5 lg:sticky lg:top-28 space-y-6">
+                <div class="bg-white p-8 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col gap-6">
+                    <h3 class="text-xl font-bold font-headline tracking-tight text-navy-900">Tóm tắt đơn hàng</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="flex gap-4 items-center">
+                            <div class="w-20 h-20 rounded-2xl overflow-hidden flex-shrink-0 bg-slate-200">
+                                <img id="orderImg" alt="Event Image" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=400&auto=format&fit=crop"/>
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <span class="text-[10px] font-bold text-teal-600 uppercase tracking-widest">Sự kiện</span>
+                                <h4 id="orderEventName" class="font-bold text-navy-900 line-clamp-1">Summit Công Nghệ 2024</h4>
+                                <p id="orderLocation" class="text-xs text-slate-500">Trung tâm hội nghị quốc gia</p>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-100 space-y-3">
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-slate-500">Hạng vé</span>
+                                <span id="orderClass" class="font-semibold text-navy-900">VIP Zone A</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-slate-500">Số lượng</span>
+                                <span id="orderQty" class="font-semibold text-navy-900">02 vé</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-slate-500">Vị trí ghế</span>
+                                <span id="orderSeats" class="font-semibold text-navy-900">Row G, Seat 12-13</span>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-100 space-y-1">
+                            <div class="flex justify-between items-end">
+                                <span class="text-sm font-medium text-slate-500">Tổng thanh toán</span>
+                                <span id="displayTotal" class="text-3xl font-black text-teal-600 font-headline tracking-tighter">4.900.000đ</span>
+                            </div>
+                            <p class="text-[10px] text-right text-slate-400 italic">*Đã bao gồm thuế GTGT và phí dịch vụ</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-3">
+                    <button id="btnPaid" class="w-full bg-teal-500 hover:bg-teal-600 text-white py-4 rounded-xl font-bold tracking-wide shadow-lg shadow-teal-500/30 transition-all active:scale-95 flex items-center justify-center gap-2">
+                        <span>Tôi đã thanh toán</span>
+                        <span class="material-symbols-outlined text-xl">check_circle</span>
+                    </button>
+                    <button onclick="window.location.href='index.html'" class="w-full bg-transparent hover:bg-slate-100 text-slate-500 py-4 rounded-xl font-semibold transition-all flex items-center justify-center gap-2">
+                        <span>Hủy giao dịch</span>
+                        <span class="material-symbols-outlined text-xl">cancel</span>
+                    </button>
+                </div>
+
+                <div class="flex items-center gap-3 justify-center text-slate-400">
+                    <span class="material-symbols-outlined text-lg">verified_user</span>
+                    <span class="text-xs font-medium">Giao dịch được bảo mật bởi Event Hub Shield</span>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <script src="data-store.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const timerDisplay = document.getElementById('countdownTimer');
+            const btnPaid = document.getElementById('btnPaid');
+            
+            let timeLeft = 60; // THAY ĐỔI: Đếm ngược 1 phút (60 giây)
+            let isPaid = false;
+
+            // 1. Lấy dữ liệu chạy ngầm từ localStorage và đổ vào giao diện
+            const savedOrder = localStorage.getItem('eventHubOrder');
+            if (!savedOrder) {
+                alert("Không tìm thấy thông tin thanh toán. Quay lại trang chủ.");
+                window.location.href = 'index.html';
+                return;
+            }
+
+            if (savedOrder) {
+                const data = JSON.parse(savedOrder);
+                
+                // Cập nhật nội dung chuyển khoản & Tổng tiền
+                document.getElementById('displayMsg').textContent = data.orderId;
+                document.getElementById('displayTotal').textContent = data.totalDisplay;
+                
+                // Cập nhật chi tiết đơn hàng (Phần hình ảnh và text bên phải)
+                document.getElementById('orderEventName').textContent = data.eventName;
+                document.getElementById('orderLocation').textContent = data.location;
+                document.getElementById('orderClass').textContent = data.ticketClass;
+                document.getElementById('orderQty').textContent = data.quantity;
+                document.getElementById('orderSeats').textContent = data.seats;
+
+                // Tạo QR động VietQR dựa trên số tiền thật
+                document.getElementById('dynamicQR').src = `https://img.vietqr.io/image/970415-19034567891011-compact.png?amount=${data.totalAmount}&addInfo=${data.orderId}&accountName=CONG%20TY%20EVENT%20HUB`;
+            }
+
+            // 2. Logic đếm ngược
+            const countdown = setInterval(() => {
+                if (isPaid) {
+                    clearInterval(countdown);
+                    return;
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    // HẾT THỜI GIAN: Chuyển sang trang Fail Payment
+                    window.location.href = 'failpayment.html'; 
+                    return;
+                }
+
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.textContent = `Mã QR sẽ hết hạn sau: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+
+            // 3. Xử lý khi bấm "Tôi đã thanh toán"
+            btnPaid.addEventListener('click', (e) => {
+                e.preventDefault();
+                isPaid = true;
+
+                // CẬP NHẬT GHẾ ĐÃ BÁN VÀO LOCALSTORAGE
+                const booking = JSON.parse(localStorage.getItem('booking'));
+                if (booking) {
+                    const soldKey = `soldSeats_${booking.scheduleId}`;
+                    const soldSeats = JSON.parse(localStorage.getItem(soldKey)) || [];
+                    booking.seats.forEach(seat => {
+                        if (!soldSeats.includes(seat.id)) soldSeats.push(seat.id);
+                    });
+                    localStorage.setItem(soldKey, JSON.stringify(soldSeats));
+                }
+
+                btnPaid.innerHTML = 'Đang xác nhận... <span class="material-symbols-outlined animate-spin">sync</span>';
+                
+                // Chuyển sang trang Thành công sau 1.5 giây
+                setTimeout(() => {
+                    window.location.href = 'success.html';
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html>
