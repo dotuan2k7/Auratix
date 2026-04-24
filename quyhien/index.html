@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticketbox Clone - 2 Tabs</title>
+    <link rel="stylesheet" href="css.css">
+</head>
+<body>
+
+    <header class="top-header">
+        <div class="container header-content">
+            <div class="logo" id="logo-home" title="Nhấn để quay về Trang chủ">ticketbox</div>
+            <div class="search-box">
+                <input type="text" placeholder="Bạn tìm gì hôm nay?">
+                <button>Tìm kiếm</button>
+            </div>
+            <div class="user-actions">
+                <button class="btn-outline">Tạo sự kiện</button>
+                <span>Vé của tôi</span>
+                <span>Đăng nhập | Đăng ký</span>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container nav-list">
+            <a href="#" class="nav-item">Nhạc sống</a>
+            <a href="#" class="nav-item">Sân khấu & Nghệ thuật</a>
+            <a href="#" class="nav-item">Thể Thao</a> 
+            <a href="#" class="nav-item">Hội thảo & Workshop</a>
+            <a href="#" class="nav-item">Tham quan & Trải nghiệm</a>
+            <a href="#" class="nav-item">Khác</a>
+            <a href="#" class="nav-item">Vé bán lại</a>
+            <a href="#" class="nav-item">Blog</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        
+        <section id="tab-home" class="view-section">
+            <div class="hero-banners">
+                <div class="image-wrapper hero-img">
+                    <img src="https://placehold.co/800x400/2ecc71/ffffff?text=Banner+Cẩm+Nang" alt="Banner">
+                </div>
+                <div class="image-wrapper hero-img">
+                    <img src="https://placehold.co/800x400/1a1a2e/ffffff?text=Concert+9" alt="Banner">
+                </div>
+            </div>
+
+            <h2 class="section-title">Sự kiện đặc biệt</h2>
+            <div class="event-row">
+                <div class="event-card">
+                    <div class="image-wrapper card-img">
+                        <img src="https://placehold.co/300x450/e74c3c/ffffff?text=Kịch+Lịch+Sử" alt="Event">
+                    </div>
+                </div>
+                <div class="event-card">
+                    <div class="image-wrapper card-img">
+                        <img src="https://placehold.co/300x450/f39c12/ffffff?text=Ca+Sĩ+1" alt="Event">
+                    </div>
+                </div>
+                <div class="event-card">
+                    <div class="image-wrapper card-img">
+                        <img src="https://placehold.co/300x450/9b59b6/ffffff?text=Ca+Sĩ+2" alt="Event">
+                    </div>
+                </div>
+                <div class="event-card">
+                    <div class="image-wrapper card-img">
+                        <img src="https://placehold.co/300x450/3498db/ffffff?text=Super+Star" alt="Event">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="tab-results" class="view-section" style="display: none;">
+            <div class="results-header">
+                <p class="results-title">Kết quả tìm kiếm:</p>
+                <div class="filters">
+                    <span class="filter-btn dark">📅 Tất cả các ngày</span>
+                    <span class="filter-btn green">⚙️ Bộ lọc</span>
+                    
+                    <span class="filter-btn outline removable-filter" title="Xóa mục này">Thể Thao ✕</span>
+                    
+                </div>
+            </div>
+            
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="image-wrapper result-img">
+                        <img src="https://placehold.co/400x250/b33939/ffffff?text=Super+Sunday" alt="Event">
+                    </div>
+                    <div class="result-info">
+                        <h3>SUPER SUNDAY - ĐẤU TRƯỜNG DANH VỌNG MÙA XUÂN 2026</h3>
+                        <p class="price">Từ 249.000đ</p>
+                        <p class="date">📅 05 tháng 04, 2026</p>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div class="image-wrapper result-img">
+                        <img src="https://placehold.co/400x250/2c2c54/ffffff?text=Go-Kart" alt="Event">
+                    </div>
+                    <div class="result-info">
+                        <h3>ĐUA XE GO-KART CITY PARK</h3>
+                        <p class="price">Từ 342.000đ</p>
+                        <p class="date">📅 05 tháng 04, 2026</p>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div class="image-wrapper result-img">
+                        <img src="https://placehold.co/400x250/c0392b/ffffff?text=Pickleball" alt="Event">
+                    </div>
+                    <div class="result-info">
+                        <h3>Giải đấu PICKLEBALL TỨ HÙNG 2026</h3>
+                        <p class="price">Từ 320.000đ</p>
+                        <p class="date">📅 11 tháng 04, 2026</p>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div class="image-wrapper result-img">
+                        <img src="https://placehold.co/400x250/d35400/ffffff?text=Lion+Championship+30" alt="Event">
+                    </div>
+                    <div class="result-info">
+                        <h3>Lion Championship 30 - 2026</h3>
+                        <p class="price">Từ 350.000đ</p>
+                        <p class="date">📅 18 tháng 04, 2026</p>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div class="image-wrapper result-img">
+                        <img src="https://placehold.co/400x250/0984e3/ffffff?text=Hanoi+Cup" alt="Event">
+                    </div>
+                    <div class="result-info">
+                        <h3>PPA ASIA 1000 - MB HANOI CUP 2026</h3>
+                        <p class="price">Từ 180.000đ</p>
+                        <p class="date">📅 05 tháng 04, 2026</p>
+                    </div>
+                </div>
+                
+                 <div class="result-card">
+                    <div class="image-wrapper result-img">
+                        <span class="badge">Đã diễn ra</span>
+                        <img src="https://placehold.co/400x250/2d3436/ffffff?text=Basketball" alt="Event">
+                    </div>
+                    <div class="result-info">
+                        <h3>Hanoi Pro-Am Basketball Championship 2026</h3>
+                        <p class="price">Từ 0đ</p>
+                        <p class="date">📅 21 tháng 03, 2026</p>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div class="image-wrapper result-img">
+                        <img src="https://placehold.co/400x250/55efc4/000000?text=Dù+Lượn+Sapa" alt="Event">
+                    </div>
+                    <div class="result-info">
+                        <h3>Trải nghiệm bay dù lượn tại Sapa</h3>
+                        <p class="price">Từ 2.190.000đ</p>
+                        <p class="date">📅 28 tháng 01, 2026</p>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div class="image-wrapper result-img">
+                        <span class="badge">Đã diễn ra</span>
+                        <img src="https://placehold.co/400x250/8e44ad/ffffff?text=Lion+Championship+29" alt="Event">
+                    </div>
+                    <div class="result-info">
+                        <h3>Lion Championship 29 - 2025</h3>
+                        <p class="price">Từ 200.000đ</p>
+                        <p class="date">📅 27 tháng 12, 2025</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    
+</body>
+</html>
