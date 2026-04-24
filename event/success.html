@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html class="light" lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Xác nhận Đặt vé - EVENT HUB</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: { 900: '#0f172a', 800: '#1e293b' },
+                        teal: { 500: '#14b8a6', 600: '#0d9488', 50: '#f0fdfa' },
+                        surface: "#f8fafc",
+                    },
+                    fontFamily: {
+                        headline: ["Plus Jakarta Sans", "sans-serif"],
+                        body: ["Inter", "sans-serif"],
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-slate-800 min-h-screen flex flex-col">
+
+    <header class="bg-navy-900 sticky top-0 z-50 shadow-lg">
+        <div class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
+            <div class="flex items-center gap-3 text-white">
+                <span class="material-symbols-outlined text-teal-500 text-3xl" style="font-variation-settings: 'FILL' 1;">graphic_eq</span>
+                <div class="text-2xl font-black tracking-wider font-headline">EVENT HUB</div>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="bg-teal-500 text-white font-bold px-6 py-2.5 rounded-xl hover:shadow-lg hover:shadow-teal-500/20 transition-all active:scale-95" onclick="window.location.href='index.html'">Trang chủ</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <section class="relative pt-16 pb-12 px-6">
+            <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+                <div class="z-10 order-2 lg:order-1">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 bg-teal-50 text-teal-600 rounded-full mb-6 border border-teal-100">
+                        <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        <span class="text-xs font-bold tracking-widest uppercase">Giao dịch thành công</span>
+                    </div>
+                    <h1 class="text-5xl lg:text-7xl font-extrabold font-headline tracking-tighter leading-tight mb-6 text-navy-900">
+                        Vé của bạn đã <br/> được <span class="text-teal-600">phát hành</span>.
+                    </h1>
+                    <p class="text-slate-500 text-lg max-w-md leading-relaxed mb-8">
+                        Mã đặt chỗ của bạn là <span id="displayOrderId" class="font-bold text-navy-900">...</span>. Thông tin chi tiết và hóa đơn đã được gửi tới email.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <button class="flex items-center gap-2 bg-teal-500 text-white px-8 py-4 rounded-xl font-bold hover:bg-teal-600 hover:shadow-xl hover:shadow-teal-500/30 transition-all active:scale-95">
+                            <span class="material-symbols-outlined">download</span>
+                            Tải vé PDF
+                        </button>
+                    </div>
+                </div>
+
+                <div class="relative order-1 lg:order-2 h-[400px] lg:h-[600px] rounded-[2rem] overflow-hidden group shadow-2xl">
+                    <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=800&auto=format&fit=crop"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-navy-900/80 to-transparent"></div>
+                    <div class="absolute bottom-8 left-8 right-8 backdrop-blur-md bg-white/10 p-6 rounded-2xl border border-white/20">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-teal-500 flex items-center justify-center text-white">
+                                <span class="material-symbols-outlined">electric_bolt</span>
+                            </div>
+                            <div>
+                                <p class="text-white/80 text-xs uppercase font-bold tracking-widest">Sự kiện tham gia</p>
+                                <p id="displayEventBanner" class="text-white font-bold text-lg">Đang tải...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-slate-100 py-20 px-6 border-t border-slate-200">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-[2.5rem] overflow-hidden shadow-2xl relative border border-slate-100">
+                    <div class="grid md:grid-cols-[1fr_auto_1.2fr]">
+                        
+                        <div class="p-10 lg:p-12">
+                            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Event Ticket</h3>
+                            <h2 id="ticketEventName" class="text-3xl font-bold font-headline mb-8 text-navy-900">...</h2>
+                            
+                            <div class="space-y-6">
+                                <div>
+                                    <p class="text-xs text-slate-500 font-medium uppercase tracking-wider mb-1">Địa điểm</p>
+                                    <p id="ticketLocation" class="font-bold text-navy-900 leading-tight">...</p>
+                                </div>
+                                <div class="grid grid-cols-3 gap-4 pt-6 border-t border-slate-100">
+                                    <div>
+                                        <p class="text-[10px] text-slate-400 uppercase font-bold">Khu vực</p>
+                                        <p id="ticketClass" class="font-bold text-teal-600 mt-1">...</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] text-slate-400 uppercase font-bold">Số lượng</p>
+                                        <p id="ticketQty" class="font-bold text-navy-900 mt-1">...</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] text-slate-400 uppercase font-bold">Vị trí ghế</p>
+                                        <p id="ticketSeats" class="font-bold text-navy-900 mt-1">...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="hidden md:flex flex-col items-center justify-between py-6 bg-slate-50">
+                            <div class="w-8 h-8 rounded-full bg-slate-100 -mt-10"></div>
+                            <div class="h-full border-l-2 border-dashed border-slate-300 my-4"></div>
+                            <div class="w-8 h-8 rounded-full bg-slate-100 -mb-10"></div>
+                        </div>
+
+                        <div class="bg-teal-50/50 p-10 lg:p-12 flex flex-col items-center justify-center text-center">
+                            <div class="bg-white p-4 rounded-3xl shadow-xl shadow-teal-500/10 mb-6 border border-teal-100">
+                                <img class="w-48 h-48" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=EventHub_Ticket_Valid"/>
+                            </div>
+                            <p class="text-sm font-bold text-teal-600 tracking-widest uppercase mb-1">Scan to enter</p>
+                            <p class="text-xs text-slate-500 max-w-[200px]">Xuất trình mã QR này tại cổng soát vé sự kiện.</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Lấy dữ liệu từ localStorage
+            const savedOrder = localStorage.getItem('eventHubOrder');
+            
+            if (savedOrder) {
+                const data = JSON.parse(savedOrder);
+                
+                // Đổ dữ liệu vào các thẻ HTML tương ứng
+                document.getElementById('displayOrderId').textContent = '#' + data.orderId;
+                document.getElementById('displayEventBanner').textContent = data.eventName;
+                
+                document.getElementById('ticketEventName').textContent = data.eventName;
+                document.getElementById('ticketLocation').textContent = data.location;
+                document.getElementById('ticketClass').textContent = data.ticketClass;
+                document.getElementById('ticketQty').textContent = data.quantity;
+                document.getElementById('ticketSeats').textContent = data.seats;
+            } else {
+                // Nếu không có dữ liệu (khách mở file trực tiếp), hiển thị giá trị mặc định
+                document.getElementById('ticketEventName').textContent = "Sự kiện chưa xác định";
+            }
+        });
+    </script>
+</body>
+</html>
