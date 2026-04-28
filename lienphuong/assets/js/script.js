@@ -21,14 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-// HÃY THAY BẰNG 2 DÒNG NÀY:
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getAuth, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyBB1QpFqLyz9KCgvUE7ZRdKwNb5zDWGrPI",
   authDomain: "ticketbox-225cf.firebaseapp.com",
@@ -47,22 +44,22 @@ const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
 
+// ========================================================
 // 5. Xử lý sự kiện click nút đăng nhập Google
+// ========================================================
 document.getElementById('btn-google').addEventListener('click', (e) => {
     e.preventDefault(); // Ngăn load lại trang
     signInWithPopup(auth, googleProvider)
       .then((result) => {
-        // Đăng nhập thành công
         const user = result.user;
         alert(`Đăng nhập Google thành công! Xin chào ${user.displayName}`);
         console.log("Thông tin user:", user);
         
         const templateParams = {
-            to_name: user.displayName, // Tên lấy từ tài khoản Google của họ
-            to_email: user.email       // Email lấy từ tài khoản Google của họ
+            to_name: user.displayName, 
+            to_email: user.email       
         };
 
-        // Gửi email thông báo
         emailjs.send("service_2uhkzho","template_0e8vo6c", templateParams)
             .then(function(response) {
                console.log('Đã gửi mail thông báo thành công!', response.status, response.text);
@@ -70,21 +67,18 @@ document.getElementById('btn-google').addEventListener('click', (e) => {
                console.log('Gửi mail thất bại...', error);
             });
             
-        // ==========================================
-        // 2 DÒNG QUAN TRỌNG NHẤT ĐỂ HOẠT ĐỘNG VỚI INDEX
-        // ==========================================
-        // 1. Phát tín hiệu đã đăng nhập cho trang index biết
+        // ĐÃ SỬA CHỖ NÀY: Lưu cờ và chuyển về trang chủ
         localStorage.setItem('isLoggedIn', 'true'); 
-        
-        // 2. Chuyển thẳng về trang chủ (Thay "index.html" nếu đường dẫn của bạn khác)
         window.location.href = "index.html"; 
-        
+
       }).catch((error) => {
         alert("Lỗi đăng nhập Google: " + error.message);
       });
 });
 
+// ========================================================
 // 6. Xử lý sự kiện click nút đăng nhập GitHub
+// ========================================================
 document.getElementById('btn-github').addEventListener('click', (e) => {
     e.preventDefault();
     signInWithPopup(auth, githubProvider)
@@ -92,14 +86,38 @@ document.getElementById('btn-github').addEventListener('click', (e) => {
         const user = result.user;
         alert(`Đăng nhập GitHub thành công! Xin chào ${user.displayName || user.email}`);
         console.log("Thông tin user:", user);
-        
-        // ==========================================
-        // ÁP DỤNG TƯƠNG TỰ CHO GITHUB
-        // ==========================================
+
+        // ĐÃ SỬA CHỖ NÀY: Lưu cờ và chuyển về trang chủ
         localStorage.setItem('isLoggedIn', 'true'); 
         window.location.href = "index.html"; 
-        
+
       }).catch((error) => {
         alert("Lỗi đăng nhập GitHub: " + error.message);
       });
 });
+
+// ========================================================
+// ========================================================
+// XỬ LÝ NÚT ĐĂNG NHẬP BẰNG EMAIL / MẬT KHẨU
+// ========================================================
+
+// Tìm cái form đăng nhập (lưu ý cái id 'login-form' phải khớp với html của bạn)
+const formDangNhap = document.getElementById('login-form') || document.getElementById('loginForm');
+
+if (formDangNhap) {
+    formDangNhap.addEventListener('submit', (e) => {
+        // 1. Chặn trình duyệt tự động F5 (bắt buộc phải có)
+        e.preventDefault(); 
+
+        // 2. Lưu cờ "đã đăng nhập" cho trang index biết
+        localStorage.setItem('isLoggedIn', 'true');
+        
+        // (Tùy chọn) Bật thông báo cho mượt
+        alert('Đăng nhập thành công! Đang chuyển về trang chủ...');
+
+        // 3. Chuyển hướng bay thẳng về index.html
+        window.location.href = 'index.html';
+    });
+} else {
+    console.log("Cảnh báo: Không tìm thấy Form Đăng nhập. Bạn hãy kiểm tra lại id trong thẻ <form> nhé.");
+}

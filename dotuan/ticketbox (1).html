@@ -54,20 +54,19 @@
             <div class="auth-card login-card">
                 <p class="step">2. ĐĂNG NHẬP (LOG IN)</p>
                 <h2>ĐĂNG NHẬP VÀO<br>EVENT HUB</h2>
-                <form id="login-form">
-                    <div class="input-group">
-                        <input type="email" placeholder="EMAIL:" required>
+                <form id="loginForm"> <div class="input-group">
+                        <input type="email" id="email" placeholder="EMAIL:" required> 
                     </div>
                     <div class="input-group">
-                        <input type="password" placeholder="MẬT KHẨU:" required id="login-pass">
-                        <i class="fa-solid fa-eye-slash toggle-password" data-target="login-pass"></i>
+                        <input type="password" id="password" placeholder="MẬT KHẨU:" required>
+                        <i class="fa-solid fa-eye-slash toggle-password" data-target="password"></i>
                     </div>
                     <div class="forgot-password">
                         <a href="#">QUÊN MẬT KHẨU?</a>
                     </div>
                     <button type="submit" class="btn-primary btn-orange">ĐĂNG NHẬP</button>
                 </form>
-
+                
                 <div class="quick-login">
                     <p><span>ĐĂNG NHẬP NHANH BẰNG</span></p>
                     <div class="social-buttons">
