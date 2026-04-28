@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng điều khiển - Event Hub</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="pc.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-bolt"></i> EVENT HUB
+            </div>
+            
+            <div class="user-avatar-section">
+                <img src="US.png" alt="Avatar" id="sidebar-avatar">
+                <p id="sidebar-username">Khách hàng</p>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item active" onclick="showTab('profile')">
+                    <i class="fas fa-user-circle"></i> Hồ sơ cá nhân
+                </button>
+                <button class="nav-item" onclick="showTab('tickets')">
+                    <i class="fas fa-ticket-alt"></i> Vé đã mua
+                </button>
+                <button class="nav-item" onclick="showTab('favorites')">
+                    <i class="fas fa-heart"></i> Sự kiện yêu thích
+                </button>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="content-header">
+                <h2 id="tab-title">Hồ sơ cá nhân</h2>
+                <div class="top-nav">
+                    <span>Chào, <strong id="top-username">User</strong></span>
+                </div>
+            </header>
+
+            <section id="profile" class="tab-pane active">
+                <div class="card">
+                    <h3>Cập nhật thông tin cá nhân</h3>
+                    <form id="profile-form">
+                        <div class="form-group">
+                            <label>Họ và tên</label>
+                            <input type="text" id="user-fullname" placeholder="Nhập tên của bạn">
+                        </div>
+                        <div class="form-group">
+                            <label>Số điện thoại</label>
+                            <input type="text" id="user-phone" placeholder="Số điện thoại liên hệ">
+                        </div>
+                        <button type="button" class="btn-primary" onclick="handleSaveProfile()">Lưu thay đổi</button>
+                    </form>
+                    
+                    <hr class="divider">
+                    
+                    <h3>Đổi mật khẩu</h3>
+                    <form id="password-form">
+                        <div class="form-group">
+                            <label>Mật khẩu mới</label>
+                            <input type="password" id="new-password" placeholder="Nhập mật khẩu mới">
+                        </div>
+                        <button type="button" class="btn-secondary" onclick="handleUpdatePassword()">Cập nhật mật khẩu</button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="tickets" class="tab-pane">
+                <div class="ticket-grid" id="ticket-list">
+                    <p class="empty-msg">Bạn chưa mua vé nào.</p>
+                </div>
+            </section>
+
+            <section id="favorites" class="tab-pane">
+                <div class="events-grid" id="favorite-list">
+                    <p class="empty-msg">Chưa có sự kiện yêu thích.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="sc.js"></script>
+
+<div id="custom-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-icon"><i class="fas fa-bell"></i></div>
+            <h3 id="modal-title">Thông báo</h3>
+            <p id="modal-message">Nội dung thông báo sẽ hiện ở đây.</p>
+            <div class="modal-actions">
+                <button id="modal-btn-cancel" class="btn-secondary" onclick="closeModal()">Hủy</button>
+                <button id="modal-btn-confirm" class="btn-primary">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

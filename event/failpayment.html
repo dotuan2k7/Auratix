@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Lỗi thanh toán - EVENT HUB</title>
+    
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: { 900: '#0f172a', 800: '#1e293b' },
+                        teal: { 500: '#14b8a6', 600: '#0d9488', 50: '#f0fdfa' },
+                        orange: { 500: '#f97316', 600: '#ea580c' },
+                        surface: "#f8fafc",
+                    },
+                    fontFamily: {
+                        headline: ["Plus Jakarta Sans", "sans-serif"],
+                        body: ["Inter", "sans-serif"],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-slate-800 min-h-screen flex flex-col">
+
+    <header class="fixed top-0 w-full z-50 bg-navy-900 shadow-lg">
+        <div class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
+            <div class="flex items-center gap-3 text-white">
+                <span class="material-symbols-outlined text-teal-500 text-3xl" style="font-variation-settings: 'FILL' 1;">graphic_eq</span>
+                <div class="text-2xl font-black tracking-wider font-headline">EVENT HUB</div>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="window.location.href='index.html'" class="text-slate-300 hover:text-white font-medium transition-colors duration-300">
+                    Trang chủ
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="relative flex-grow pt-24 flex items-center justify-center overflow-hidden">
+        <div class="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-red-500/5 blur-[120px] rounded-full pointer-events-none"></div>
+        <div class="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-orange-500/5 blur-[120px] rounded-full pointer-events-none"></div>
+        
+        <div class="container max-w-3xl px-6 relative z-10 py-12">
+            <div class="flex flex-col items-center text-center">
+                
+                <div class="relative mb-10">
+                    <div class="absolute inset-0 bg-red-500/10 blur-2xl rounded-full scale-150"></div>
+                    <div class="relative flex items-center justify-center w-28 h-28 rounded-[2rem] bg-white shadow-xl shadow-red-500/10 border border-red-100 rotate-3">
+                        <div class="flex items-center justify-center w-full h-full -rotate-3">
+                            <span class="material-symbols-outlined text-red-500 text-5xl">hourglass_disabled</span>
+                        </div>
+                    </div>
+                    <div class="absolute -top-2 -right-2 w-10 h-10 rounded-xl bg-red-100 border border-white flex items-center justify-center text-red-600 shadow-md -rotate-12">
+                        <span class="material-symbols-outlined text-xl">priority_high</span>
+                    </div>
+                </div>
+
+                <h1 class="font-headline text-4xl md:text-5xl font-extrabold text-navy-900 tracking-tight leading-tight mb-4">
+                    Giao dịch không thành công <br class="hidden md:block"/> hoặc <span class="text-red-500">Đã hết hạn</span>
+                </h1>
+                <p class="text-slate-500 text-lg max-w-xl mx-auto leading-relaxed mb-10">
+                    Rất tiếc, thời gian giữ chỗ của bạn đã kết thúc hoặc có lỗi xảy ra trong quá trình xử lý thanh toán. Hệ thống đã tự động giải phóng vé để đảm bảo công bằng.
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
+                    <button onclick="window.location.href='payment.html'" class="group inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 font-headline font-bold text-white bg-teal-500 rounded-xl shadow-lg shadow-teal-500/30 hover:bg-teal-600 transition-all active:scale-95">
+                        <span class="relative flex items-center gap-2">
+                            Thử lại ngay
+                            <span class="material-symbols-outlined group-hover:rotate-180 transition-transform duration-500">refresh</span>
+                        </span>
+                    </button>
+                    <button onclick="window.location.href='index.html'" class="group inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 font-headline font-bold text-navy-900 bg-white border-2 border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-95">
+                        <span class="relative flex items-center gap-2">
+                            Quay lại trang chủ
+                            <span class="material-symbols-outlined">home</span>
+                        </span>
+                    </button>
+                </div>
+
+                <div class="mt-12 pt-8 border-t border-slate-200 w-full max-w-md">
+                    <p class="text-sm text-slate-500">
+                        Bạn cần trợ giúp?
+                        <a class="text-teal-600 font-semibold hover:text-teal-700 hover:underline underline-offset-4 ml-1 transition-colors" href="#">Liên hệ hỗ trợ 24/7</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute bottom-8 right-8 hidden lg:block">
+            <div class="bg-white/90 backdrop-blur-md p-5 rounded-2xl shadow-xl border border-slate-100 max-w-xs">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                    <span class="text-xs font-bold tracking-widest text-slate-400 uppercase">Mã lỗi: TIMEOUT_0X44</span>
+                </div>
+                <p class="text-xs text-slate-500">Vé của bạn đã được đưa vào lại hàng chờ. Vui lòng đặt lại từ đầu.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="w-full py-8 bg-white border-t border-slate-200 mt-auto">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex flex-col md:flex-row items-center gap-2 md:gap-6">
+                <span class="font-headline font-bold text-navy-900">EVENT HUB</span>
+                <span class="hidden md:block w-1 h-1 bg-slate-300 rounded-full"></span>
+                <p class="text-xs text-slate-500">© 2024 Event Hub Vietnam. All rights reserved.</p>
+            </div>
+            <div class="flex gap-6">
+                <a class="text-xs font-medium text-slate-400 hover:text-teal-600 transition-colors" href="#">Privacy</a>
+                <a class="text-xs font-medium text-slate-400 hover:text-teal-600 transition-colors" href="#">Terms</a>
+                <a class="text-xs font-medium text-slate-400 hover:text-teal-600 transition-colors" href="#">Help Center</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Events</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 50px;
+  padding: 32px;
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+h2 {
+  margin: 32px 0 16px;
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.card:hover img {
+  transform: scale(1.05);
+}
+
+.card-body {
+  padding: 12px 14px 16px;
+}
+
+.card h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+  min-height: 40px;
+  color: #0f172a;
+}
+
+.card p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.empty {
+  color: #64748b;
+  font-size: 14px;
+}
+.search-container {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+#searchInput {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #dbe1ea;
+  border-radius: 8px;
+  outline: none;
+  font-size: 16px;
+}
+
+#categoryFilter {
+  padding: 12px 16px;
+  border: 1px solid #dbe1ea;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  min-width: 150px;
+}
+
+#searchInput:focus, #categoryFilter:focus {
+  border-color: #14b8a6;
+}
+
+/* Ẩn các tiêu đề khi đang tìm kiếm để tránh bị rối */
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="search-container">
+  <input type="text" id="searchInput" placeholder="Tìm kiếm tên sự kiện hoặc thành phố...">
+  
+  <select id="categoryFilter">
+    <option value="all">Tất cả danh mục</option>
+    <option value="concert">Concert</option>
+    <option value="sport">Sport</option>
+    <option value="game">Game</option>
+    <option value="special">Special</option>
+  </select>
+</div>
+<h2>Concert</h2>
+<div class="grid" id="concertGrid"></div>
+
+<h2>Sport</h2>
+<div class="grid" id="sportGrid"></div>
+
+<h2>Game</h2>
+<div class="grid" id="gameGrid"></div>
+
+<h2>Special</h2>
+<div class="grid" id="specialGrid"></div>
+
+<script src="data-store.js"></script>
+<script>
+const categoryMap = {
+  concert: "concertGrid",
+  sport: "sportGrid",
+  game: "gameGrid",
+  special: "specialGrid"
+};
+
+let globalDatabase = null;
+
+// 1. Hàm khởi tạo duy nhất
+async function init() {
+  try {
+    globalDatabase = await EventStore.loadDatabase();
+
+    // Gán sự kiện cho các ô input/select
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+
+    if (searchInput) searchInput.addEventListener('input', applyFilters);
+    if (categoryFilter) categoryFilter.addEventListener('change', applyFilters);
+
+    // Hiển thị dữ liệu lần đầu
+    applyFilters();
+  } catch (error) {
+    console.error(error);
+    document.body.innerHTML = `<p>Không tải được dữ liệu: ${error.message}</p>`;
+  }
+}
+
+// 2. Logic lọc dữ liệu
+function applyFilters() {
+  if (!globalDatabase) return;
+
+  const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || "";
+  const selectedCategory = document.getElementById('categoryFilter')?.value || "all";
+
+  Object.entries(categoryMap).forEach(([categoryKey, containerId]) => {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const titleHeader = container.previousElementSibling;
+
+    // Lọc sự kiện theo: Danh mục của Grid AND (Bộ lọc category AND Tìm kiếm)
+    const filteredEvents = globalDatabase.events.filter(event => {
+      const isCorrectGrid = event.category === categoryKey;
+      const matchesFilter = (selectedCategory === "all" || event.category === selectedCategory);
+      const matchesSearch = event.title.toLowerCase().includes(searchTerm) || 
+                            event.city.toLowerCase().includes(searchTerm);
+      
+      return isCorrectGrid && matchesFilter && matchesSearch;
+    });
+
+    // Ẩn/Hiện container và tiêu đề
+    if (filteredEvents.length === 0) {
+      container.classList.add('hidden');
+      if (titleHeader) titleHeader.classList.add('hidden');
+    } else {
+      container.classList.remove('hidden');
+      if (titleHeader) titleHeader.classList.remove('hidden');
+      renderList(filteredEvents, container);
+    }
+  });
+}
+
+// 3. Hàm render Card dùng chung
+function renderList(events, container) {
+  container.innerHTML = "";
+
+  events.forEach((event) => {
+    const schedules = EventStore.getSchedulesByEventId(globalDatabase, event.id);
+    const firstSchedule = schedules[0];
+    const lowestPrice = firstSchedule ? EventStore.getLowestPrice(firstSchedule) : 0;
+
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <img src="${event.banner}" alt="${event.title}">
+      <div class="card-body">
+        <h3>${event.title}</h3>
+        <p>${firstSchedule ? EventStore.formatDate(firstSchedule.date) : "Chưa có lịch"}</p>
+        <p>${event.city}</p>
+        <p>${lowestPrice > 0 ? EventStore.formatCurrency(lowestPrice) : "Liên hệ"}</p>
+      </div>
+    `;
+
+  card.onclick = () => {
+  // Phải đảm bảo event.id và firstSchedule.id có tồn tại
+  localStorage.setItem("selectedEventId", String(event.id));
+  if (firstSchedule) {
+    localStorage.setItem("selectedScheduleId", String(firstSchedule.id));
+  }
+  window.location.href = "detail.html";
+};
+
+    container.appendChild(card);
+  });
+}
+
+// Chạy ứng dụng
+init();
+</script>
+</body>
+</html>

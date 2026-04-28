@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đăng ký sự kiện</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+}
+
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.form-container {
+  width: 900px;
+  background: #1e293b;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.steps {
+  display: flex;
+  justify-content: space-around;
+  background: #0f172a;
+  padding: 10px;
+}
+
+.step {
+  color: #94a3b8;
+}
+
+.step.active {
+  color: #22c55e;
+  font-weight: bold;
+}
+
+.form-header {
+  background: #0b2c3d;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.form-body {
+  display: flex;
+}
+
+.left {
+  width: 55%;
+  padding: 20px;
+  background: #1e293b;
+  color: white;
+}
+
+.right {
+  width: 45%;
+  background: #f1f5f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.form-group,
+.summary-box {
+  background: #020617;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 14px;
+}
+
+.input-box {
+  margin-bottom: 10px;
+}
+
+.input-box label {
+  display: block;
+  margin-bottom: 5px;
+  color: #cbd5f5;
+}
+
+.input-box input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: white;
+  box-sizing: border-box;
+}
+
+.input-box input:focus {
+  border-color: #22c55e;
+  outline: none;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background: #22c55e;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+small {
+  color: #f87171;
+}
+
+.payment img {
+  width: 200px;
+  margin: 10px 0;
+}
+
+.success {
+  text-align: center;
+}
+
+.check {
+  width: 60px;
+  height: 60px;
+  background: #22c55e;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 30px;
+  margin: 0 auto 12px;
+}
+
+.hidden {
+  display: none;
+}
+</style>
+</head>
+<body>
+
+<div class="modal">
+  <div class="form-container">
+    <div class="steps">
+      <div class="step active" id="step1">1. Nhập thông tin</div>
+      <div class="step" id="step2">2. Thanh toán</div>
+      <div class="step" id="step3">3. Hoàn tất</div>
+    </div>
+
+    <div class="form-header">FORM ĐĂNG KÝ SỰ KIỆN</div>
+
+    <div class="form-body">
+      <div class="left">
+        <h2 id="event-title"></h2>
+        <p id="event-meta"></p>
+
+        <div class="form-group">
+          <h3>Thông tin người đặt</h3>
+
+          <div class="input-box">
+            <label>Họ tên</label>
+            <input id="name" placeholder="Nhập họ tên">
+            <small id="name-error"></small>
+          </div>
+
+          <div class="input-box">
+            <label>Email</label>
+            <input id="email" placeholder="Nhập email">
+            <small id="email-error"></small>
+          </div>
+
+          <div class="input-box">
+            <label>Số điện thoại</label>
+            <input id="phone" placeholder="Nhập số điện thoại">
+            <small id="phone-error"></small>
+          </div>
+        </div>
+
+        <div class="summary-box">
+          <p>Ghế đã chọn: <b id="seat-list"></b></p>
+          <p>Đơn giá: <b id="price"></b></p>
+          <p>Tổng tiền: <b id="total"></b></p>
+        </div>
+
+        <button onclick="startPayment()">Xác nhận</button>
+      </div>
+
+      <div class="right">
+        <div id="paymentBox" class="payment hidden">
+          <h3>Quét QR để thanh toán</h3>
+          <img id="qr" alt="QR thanh toán">
+          <p id="countdown"></p>
+        </div>
+
+        <div id="successBox" class="success hidden">
+          <div class="check">✓</div>
+          <h3>ĐĂNG KÝ THÀNH CÔNG</h3>
+          <p id="info"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="data-store.js"></script>
+<script>
+let database;
+let eventData;
+let schedule;
+let booking;
+let step1Done = false;
+let paymentDone = false;
+
+function setActiveStep(step) {
+  document.getElementById("step1").classList.toggle("active", step === 1);
+  document.getElementById("step2").classList.toggle("active", step === 2);
+  document.getElementById("step3").classList.toggle("active", step === 3);
+  document.getElementById("paymentBox").classList.toggle("hidden", step !== 2);
+  document.getElementById("successBox").classList.toggle("hidden", step !== 3);
+}
+
+function validate() {
+  let ok = true;
+
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+
+  if (name.length < 3) {
+    document.getElementById("name-error").innerText = "Tên không hợp lệ";
+    ok = false;
+  } else {
+    document.getElementById("name-error").innerText = "";
+  }
+
+  if (!email.includes("@")) {
+    document.getElementById("email-error").innerText = "Email sai";
+    ok = false;
+  } else {
+    document.getElementById("email-error").innerText = "";
+  }
+
+  if (phone.length < 9) {
+    document.getElementById("phone-error").innerText = "SĐT sai";
+    ok = false;
+  } else {
+    document.getElementById("phone-error").innerText = "";
+  }
+
+  return ok;
+}
+
+function startPayment() {
+  if (!validate()) {
+    return;
+  }
+
+  step1Done = true;
+  setActiveStep(2);
+
+  document.getElementById("qr").src =
+    `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(booking.scheduleId)}`;
+
+  let timeLeft = 5;
+  const countdown = setInterval(() => {
+    document.getElementById("countdown").innerHTML =
+      `Thanh toán: ${EventStore.formatCurrency(booking.total)}<br>Đang xử lý... ${timeLeft}s`;
+
+    timeLeft -= 1;
+    if (timeLeft < 0) {
+      clearInterval(countdown);
+      completePayment();
+    }
+  }, 1000);
+}
+
+function completePayment() {
+  paymentDone = true;
+  setActiveStep(3);
+
+  const soldKey = `soldSeats_${booking.scheduleId}`;
+  const soldSeats = JSON.parse(localStorage.getItem(soldKey)) || [];
+
+  booking.seats.forEach((seat) => {
+    if (!soldSeats.includes(seat.id)) {
+      soldSeats.push(seat.id);
+    }
+  });
+
+  localStorage.setItem(soldKey, JSON.stringify(soldSeats));
+
+  const order = {
+    id: `REG${Math.floor(Math.random() * 100000)}`,
+    eventId: eventData.id,
+    eventTitle: eventData.title,
+    scheduleId: schedule.id,
+    buyer: {
+      name: document.getElementById("name").value.trim(),
+      email: document.getElementById("email").value.trim(),
+      phone: document.getElementById("phone").value.trim()
+    },
+    seats: booking.seats,
+    total: booking.total,
+    createdAt: new Date().toLocaleString("vi-VN")
+  };
+
+  const orders = JSON.parse(localStorage.getItem("orders")) || [];
+  orders.push(order);
+  localStorage.setItem("orders", JSON.stringify(orders));
+
+  document.getElementById("info").innerHTML = `
+    ID: ${order.id}<br>
+    Event: ${order.eventTitle}<br>
+    Suất diễn: ${EventStore.formatDate(schedule.date)} | ${schedule.time}<br>
+    Ghế: ${booking.seats.map((seat) => seat.label).join(", ")}<br>
+    Tổng tiền: ${EventStore.formatCurrency(order.total)}
+  `;
+
+  localStorage.removeItem("booking");
+}
+
+async function init() {
+  booking = JSON.parse(localStorage.getItem("booking"));
+
+  if (!booking || !booking.seats || !booking.seats.length) {
+    alert("Bạn phải chọn ghế trước.");
+    window.location.href = "detail.html";
+    return;
+  }
+
+  if (Date.now() > booking.expire) {
+    localStorage.removeItem("booking");
+    alert("Ghế đã hết thời gian giữ.");
+    window.location.href = "detail.html";
+    return;
+  }
+
+  database = await EventStore.loadDatabase();
+  eventData = EventStore.getEventById(database, booking.eventId);
+  schedule = EventStore.getScheduleById(database, booking.scheduleId);
+
+  if (!eventData || !schedule) {
+    alert("Không tìm thấy dữ liệu thanh toán.");
+    window.location.href = "index.html";
+    return;
+  }
+
+  document.getElementById("event-title").innerText = eventData.title;
+  document.getElementById("event-meta").innerText =
+    `${EventStore.formatDate(schedule.date)} | ${schedule.time} | ${schedule.location}`;
+  document.getElementById("seat-list").innerText =
+    booking.seats.map((seat) => seat.label).join(", ");
+  document.getElementById("price").innerText =
+    booking.seats.map((seat) => `${seat.label}: ${EventStore.formatCurrency(seat.price)}`).join(" | ");
+  document.getElementById("total").innerText = EventStore.formatCurrency(booking.total);
+}
+
+init().catch((error) => {
+  document.body.innerHTML = `<p>Không tải được dữ liệu: ${error.message}</p>`;
+});
+</script>
+</body>
+</html>

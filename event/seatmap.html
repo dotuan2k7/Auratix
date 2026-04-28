@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seatmap Pro</title>
+<style>
+body {
+  margin: 0;
+  background: #f7f7f8;
+  color: rgb(255, 253, 253);
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+#wrapper {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+#map {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  transform-origin: center;
+  cursor: grab;
+}
+
+.stage {
+  width: 300px;
+  height: 60px;
+  background: #14b8a6;
+  text-align: center;
+  line-height: 60px;
+  margin: 20px auto 80px; /* Tăng từ 40px lên 80px để tạo khoảng cách với ghế */
+  border-radius: 12px;
+}
+
+.custom-map {
+  width: 1000px;
+  height: 600px;
+  position: relative;
+}
+
+.custom-stage {
+  position: absolute;
+  top: 10px; /* Đưa sân khấu lên sát mép trên */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 60px;
+  background: #14b8a6;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border-radius: 12px;
+}
+
+.custom-walkway {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1f2937;
+  border-radius: 10px;
+}
+
+.zone {
+  margin: 30px;
+  display: inline-block;
+  transition: 0.3s;
+}
+
+.zone.curve {
+  transform: perspective(600px) rotateX(20deg);
+}
+
+.zone-name {
+  text-align: center;
+  margin-bottom: 8px;
+  color: #dbeafe;
+  font-size: 13px;
+}
+
+.custom-section {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #000;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 10px;
+  text-align: center;
+  padding: 8px;
+  box-sizing: border-box;
+  white-space: pre-line;
+}
+
+.custom-section:hover {
+  box-shadow: 0 0 15px #fff;
+}
+
+.custom-section.selected {
+  outline: 3px solid #fff;
+}
+
+.custom-section.disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.custom-section.disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.cat1a {
+  background: #2563eb;
+}
+
+.cat2a {
+  background: #f97316;
+}
+
+.ga3a {
+  background: #16a34a;
+}
+
+.ga2a {
+  background: #84cc16;
+}
+
+.ga1a {
+  background: #0ea5e9;
+}
+
+.fanzone-a {
+  background: #06b6d4;
+}
+
+.fanzone-b {
+  background: #8b5cf6;
+}
+
+.ga1b {
+  background: #3b82f6;
+}
+
+.ga2b {
+  background: #10b981;
+}
+
+.ga3b {
+  background: #65a30d;
+}
+
+.cat1b {
+  background: #4f46e5;
+}
+
+.cat2b {
+  background: #fb7185;
+}
+
+.vip-pink {
+  background: #f472b6;
+}
+
+.vip-purple {
+  background: #a78bfa;
+}
+
+.sky-lounge {
+  background: #f97316;
+}
+
+.slay-tech {
+  background: rgb(255, 2, 2);
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.slay-fanzone {
+  background: #00bfff;
+  color: #fff;
+}
+
+.slay-svip {
+  background: #7c3aed;
+}
+
+.slay-vip {
+  background: #ec4899;
+}
+
+.slay-ga1 {
+  background: #22d3ee;
+  color: #028ce8;
+}
+
+.slay-ga2 {
+  background: #06be06;
+  color: #14532d;
+}
+
+.slay-ga3 {
+  background: #228b22;
+}
+
+.slay-cat1 {
+  background: #002147;
+}
+
+.slay-cat2 {
+  background: #f97316;
+}
+
+.slay-control {
+  background: rgba(0, 6, 15, 0.9);
+  color: rgb(255, 249, 249);
+}
+
+.slay-sky1 {
+  background: #7dd3fc;
+  color: #082f49;
+}
+
+.slay-sky2 {
+  background: #eab308;
+  color: #fff;
+}
+
+.thang4-pa-side {
+  background: #ec4899;
+}
+
+.thang4-pa-center {
+  background: #db2777;
+}
+
+.thang4-pb-side {
+  background: #ca8a04;
+}
+
+.thang4-pb-center {
+  background: #a16207;
+}
+
+.thang4-pc-side {
+  background: #059669;
+}
+
+.thang4-ga-center {
+  background: #0891b2;
+}
+
+.thang4-cat4 {
+  background: #0f766e;
+}
+
+.thang4-cat5 {
+  background: #6d28d9;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+}
+
+.seat {
+  width: 26px;
+  height: 26px;
+  margin: 3px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.seat:hover {
+  transform: scale(1.2);
+}
+
+.seat.selected {
+  outline: 2px solid #f8fafc;
+}
+
+.seat.sold {
+  background: #444 !important;
+  cursor: not-allowed;
+}
+
+.legend,
+.info {
+  position: absolute;
+  background: #1a1f26;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.legend {
+  bottom: 20px;
+  left: 20px;
+  min-width: 220px;
+}
+
+.info {
+  top: 20px;
+  right: 20px;
+  width: 280px;
+}
+
+.legend-item {
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+#selectedInfo {
+  white-space: pre-line;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  margin-right: 8px;
+  border-radius: 3px;
+}
+
+button {
+  margin-top: 12px;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #14b8a6; /* Đổi sang Teal */
+  color: white;
+  cursor: pointer;
+}
+button:hover {
+  background: #0d9488;
+}
+</style>
+</head>
+<body>
+
+<div id="wrapper">
+  <div id="map"></div>
+
+  <div class="legend">
+    <b>Chú thích</b>
+    <div id="legend"></div>
+  </div>
+
+  <div class="info">
+    <div id="eventInfo"></div>
+    <div id="selectedInfo">Chưa chọn ghế</div>
+    <div id="countdown"></div>
+    <button onclick="goPay()">Thanh toán</button>
+  </div>
+</div>
+
+<script src="data-store.js"></script>
+<script>
+let database;
+let eventData;
+let schedule;
+let seatMap;
+let selectedSeats = [];
+let scale = 1;
+let timer = null;
+const MAX_SEATS_PER_AREA = 50; // Tăng giới hạn để phù hợp với sự kiện lớn hơn
+
+const map = document.getElementById("map");
+
+function getSoldKey() {
+  return `soldSeats_${schedule.id}`;
+}
+
+function getSoldSeats() {
+  return JSON.parse(localStorage.getItem(getSoldKey())) || [];
+}
+
+function countSelectedInArea(areaId) {
+  return selectedSeats.filter((seat) => seat.areaId === areaId).length;
+}
+
+function getAreaSummary() {
+  const summary = {};
+
+  selectedSeats.forEach((seat) => {
+    if (!summary[seat.areaId]) {
+      summary[seat.areaId] = {
+        zoneName: seat.zoneName,
+        count: 0
+      };
+    }
+
+    summary[seat.areaId].count += 1;
+  });
+
+  return Object.values(summary);
+}
+
+function getNextCustomSeatNumber(areaId) {
+  const soldNumbers = getSoldSeats()
+    .filter((seatId) => seatId.startsWith(`${areaId}-S`))
+    .map((seatId) => Number(seatId.split("-S")[1]))
+    .filter((value) => Number.isFinite(value));
+
+  const selectedNumbers = selectedSeats
+    .filter((seat) => seat.areaId === areaId)
+    .map((seat) => Number(seat.id.split("-S")[1]))
+    .filter((value) => Number.isFinite(value));
+
+  for (let number = 1; number <= MAX_SEATS_PER_AREA; number++) {
+    if (!soldNumbers.includes(number) && !selectedNumbers.includes(number)) {
+      return number;
+    }
+  }
+
+  return null;
+}
+
+function countSoldInArea(areaId) {
+  return getSoldSeats().filter((seatId) => seatId.startsWith(`${areaId}-S`)).length;
+}
+
+function updateCustomSectionVisual(section, sectionElement) {
+  const count = countSelectedInArea(section.id);
+  sectionElement.classList.toggle("selected", count > 0);
+  sectionElement.innerText = count > 0 ? `${section.label}\n×${count}` : section.label;
+}
+
+function renderSeatMap() {
+  map.innerHTML = `<div class="stage">${seatMap.stageLabel}</div>`;
+  document.getElementById("legend").innerHTML = "";
+
+  seatMap.zones.forEach((zone) => {
+    const info = EventStore.getZoneInfo(schedule, zone.id, seatMap);
+    const zonePrice = schedule.zonePrices[zone.id] ?? 0;
+    const zoneDiv = document.createElement("div");
+    zoneDiv.className = "zone curve";
+    zoneDiv.innerHTML = `<div class="zone-name">${info.name}</div>`;
+
+    const legendItem = document.createElement("div");
+    legendItem.className = "legend-item";
+    legendItem.innerHTML = `
+      <span class="legend-color" style="background:${info.color}"></span>
+      ${info.name} - ${EventStore.formatCurrency(zonePrice)}
+    `;
+    document.getElementById("legend").appendChild(legendItem);
+
+    for (let rowIndex = 0; rowIndex < zone.rows; rowIndex++) {
+      const row = document.createElement("div");
+      row.className = "row";
+
+      for (let colIndex = 0; colIndex < zone.cols; colIndex++) {
+        const seatId = EventStore.buildSeatId(zone.id, rowIndex, colIndex);
+        const seatLabel = `${zone.id}-${rowIndex + 1}-${colIndex + 1}`;
+        const seat = document.createElement("div");
+        seat.className = "seat";
+        seat.style.background = info.color;
+        seat.title = seatLabel;
+
+        if (getSoldSeats().includes(seatId)) {
+          seat.classList.add("sold");
+        }
+
+        seat.onclick = () => toggleSeat({ ...zone, name: info.name }, seatId, seatLabel, seat);
+        row.appendChild(seat);
+      }
+
+      zoneDiv.appendChild(row);
+    }
+
+    map.appendChild(zoneDiv);
+  });
+}
+
+function renderCustomSeatMap() {
+  const canvasWidth = seatMap.canvas?.width || 1000;
+  const canvasHeight = seatMap.canvas?.height || 600;
+  const walkwayHtml = seatMap.walkway
+    ? `
+      <div
+        class="custom-walkway"
+        style="width:${seatMap.walkway.width}px;height:${seatMap.walkway.height}px;"
+      ></div>
+    `
+    : "";
+
+  map.innerHTML = `
+    <div class="custom-map" style="width:${canvasWidth}px;height:${canvasHeight}px;">
+      <div class="custom-stage">${seatMap.stageLabel}</div>
+      ${walkwayHtml}
+    </div>
+  `;
+
+  document.getElementById("legend").innerHTML = "";
+  const customMap = map.querySelector(".custom-map");
+
+  seatMap.sections.forEach((section) => {
+    const info = EventStore.getZoneInfo(schedule, section.id, seatMap);
+    const price = schedule.zonePrices[section.priceKey] ?? 0;
+    const sectionElement = document.createElement("div");
+    sectionElement.className = `custom-section ${section.className || ""}`;
+    sectionElement.style.left = `${section.x}px`;
+    sectionElement.style.top = `${section.y}px`;
+    sectionElement.style.width = `${section.width}px`;
+    sectionElement.style.height = `${section.height}px`;
+    sectionElement.style.borderRadius = section.borderRadius || "";
+
+    // Đảm bảo không bị đè bởi màu trắng mặc định
+    let finalColor = info.color || section.color || "";
+    if (finalColor === "#ffffff" || finalColor === "white") {
+        finalColor = section.color || ""; 
+    }
+
+    if (finalColor) sectionElement.style.backgroundColor = finalColor;
+
+    sectionElement.dataset.rotate = String(section.rotate || 0);
+    sectionElement.style.transform = `rotate(${section.rotate || 0}deg)`;
+    sectionElement.innerText = info.name;
+    sectionElement.onmouseenter = () => {
+      sectionElement.style.transform = `rotate(${section.rotate || 0}deg) scale(1.06)`;
+    };
+    sectionElement.onmouseleave = () => {
+      sectionElement.style.transform = `rotate(${section.rotate || 0}deg)`;
+    };
+    const isSelectable = section.selectable !== false;
+    sectionElement.title = isSelectable
+      ? `${info.name} - ${EventStore.formatCurrency(price)} | Click trái: +1, Click phải: -1`
+      : info.name;
+
+    if (!isSelectable) {
+      sectionElement.classList.add("disabled");
+    }
+
+    if (isSelectable && countSoldInArea(section.id) >= MAX_SEATS_PER_AREA) {
+      sectionElement.classList.add("sold");
+    }
+
+    if (isSelectable) {
+      sectionElement.onclick = () => toggleCustomSection({ ...section, label: info.name }, sectionElement, price, "add");
+      sectionElement.oncontextmenu = (event) => {
+        event.preventDefault();
+        toggleCustomSection({ ...section, label: info.name }, sectionElement, price, "remove");
+      };
+    }
+    customMap.appendChild(sectionElement);
+
+    if (!isSelectable) {
+      return;
+    }
+
+    const legendItem = document.createElement("div");
+    legendItem.className = "legend-item";
+    legendItem.innerHTML = `
+      <span class="legend-color" style="background:${getComputedStyle(sectionElement).backgroundColor}"></span>
+      ${info.name} - ${EventStore.formatCurrency(price)}
+    `;
+    document.getElementById("legend").appendChild(legendItem);
+  });
+}
+
+function toggleSeat(zone, seatId, seatLabel, seatElement) {
+  if (seatElement.classList.contains("sold")) {
+    return;
+  }
+
+  const existingIndex = selectedSeats.findIndex((seat) => seat.id === seatId);
+
+  if (existingIndex >= 0) {
+    selectedSeats.splice(existingIndex, 1);
+    seatElement.classList.remove("selected");
+  } else {
+    if (countSelectedInArea(zone.id) >= MAX_SEATS_PER_AREA) {
+      alert(`Mỗi khu chỉ được chọn tối đa ${MAX_SEATS_PER_AREA} ghế.`);
+      return;
+    }
+
+    selectedSeats.push({
+      id: seatId,
+      label: seatLabel,
+      zoneId: zone.id,
+      zoneName: zone.name,
+      price: schedule.zonePrices[zone.id] ?? 0,
+      areaId: zone.id
+    });
+    seatElement.classList.add("selected");
+  }
+
+  updateBooking();
+}
+
+function toggleCustomSection(section, sectionElement, price, mode = "add") {
+  if (sectionElement.classList.contains("sold")) {
+    return;
+  }
+
+  if (mode === "remove") {
+    const existingSeats = selectedSeats.filter((seat) => seat.areaId === section.id);
+    if (!existingSeats.length) {
+      return;
+    }
+
+    const seatToRemove = existingSeats[existingSeats.length - 1];
+    selectedSeats = selectedSeats.filter((seat) => seat.id !== seatToRemove.id);
+    updateCustomSectionVisual(section, sectionElement);
+  } else {
+    if (countSelectedInArea(section.id) >= MAX_SEATS_PER_AREA) {
+      alert(`Mỗi khu chỉ được chọn tối đa ${MAX_SEATS_PER_AREA} ghế.`);
+      return;
+    }
+
+    const seatNumber = getNextCustomSeatNumber(section.id);
+    if (!seatNumber) {
+      alert("Khu vực này đã hết ghế khả dụng.");
+      return;
+    }
+
+    selectedSeats.push({
+      id: `${section.id}-S${seatNumber}`,
+      label: `${section.label} #${seatNumber}`,
+      zoneId: section.priceKey,
+      zoneName: section.label,
+      price,
+      areaId: section.id
+    });
+    updateCustomSectionVisual(section, sectionElement);
+  }
+
+  updateBooking();
+}
+
+function updateBooking() {
+  if (!selectedSeats.length) {
+    localStorage.removeItem("booking");
+    document.getElementById("selectedInfo").innerText = "Chưa chọn ghế";
+    document.getElementById("countdown").innerText = "";
+    clearInterval(timer);
+    return;
+  }
+
+  const total = selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
+  const booking = {
+    eventId: eventData.id,
+    scheduleId: schedule.id,
+    seatMapId: seatMap.id,
+    seats: selectedSeats,
+    total,
+    expire: Date.now() + 5 * 60 * 1000
+  };
+
+  localStorage.setItem("booking", JSON.stringify(booking));
+  const areaSummary = getAreaSummary()
+    .map((item) => `${item.zoneName} x${item.count}`)
+    .join(" | ");
+
+  document.getElementById("selectedInfo").innerText =
+    `${areaSummary}\nTổng ${selectedSeats.length} ghế | ${EventStore.formatCurrency(total)}`;
+
+  startCountdown();
+}
+
+function startCountdown() {
+  clearInterval(timer);
+
+  timer = setInterval(() => {
+    const booking = JSON.parse(localStorage.getItem("booking"));
+    if (!booking) {
+      clearInterval(timer);
+      return;
+    }
+
+    const left = Math.floor((booking.expire - Date.now()) / 1000);
+    if (left <= 0) {
+      localStorage.removeItem("booking");
+      alert("Hết thời gian giữ ghế.");
+      location.reload();
+      return;
+    }
+
+    document.getElementById("countdown").innerText = `Giữ ghế: ${left}s`;
+  }, 1000);
+}
+
+function goPay() {
+  const booking = JSON.parse(localStorage.getItem("booking"));
+  if (!booking || !booking.seats.length) {
+    alert("Chọn ghế trước.");
+    return;
+  }
+
+  if (Date.now() > booking.expire) {
+    localStorage.removeItem("booking");
+    alert("Giữ ghế đã hết hạn.");
+    return;
+  }
+
+  location.href = "index2.html"; 
+}
+
+async function init() {
+  const eventId = localStorage.getItem("selectedEventId");
+  const scheduleId = localStorage.getItem("selectedScheduleId");
+
+  if (!eventId || !scheduleId) {
+    window.location.href = "index.html";
+    return;
+  }
+
+  database = await EventStore.loadDatabase();
+  eventData = EventStore.getEventById(database, eventId);
+  schedule = EventStore.getScheduleById(database, scheduleId);
+
+  if (!eventData || !schedule || String(schedule.eventId) !== String(eventData.id)) {
+    alert("Thiếu dữ liệu sự kiện.");
+    window.location.href = "detail.html";
+    return;
+  }
+
+  seatMap = EventStore.getSeatMapById(database, eventData.seatMapId);
+  if (!seatMap) {
+    alert("Sự kiện chưa có sơ đồ ghế.");
+    window.location.href = "detail.html";
+    return;
+  }
+
+  document.getElementById("eventInfo").innerHTML = `
+    <b>${eventData.title}</b><br>
+    ${EventStore.formatDate(schedule.date)} | ${schedule.time}<br>
+    ${schedule.location}
+  `;
+
+  if (seatMap.type === "custom-zones") {
+    renderCustomSeatMap();
+  } else {
+    renderSeatMap();
+  }
+}
+
+document.addEventListener("wheel", (event) => {
+  scale += event.deltaY * -0.001;
+  scale = Math.min(Math.max(0.5, scale), 2);
+  map.style.transform = `translate(-50%, -50%) scale(${scale})`;
+});
+
+let isDown = false;
+let startX = 0;
+let startY = 0;
+
+map.onmousedown = (event) => {
+  isDown = true;
+  startX = event.clientX;
+  startY = event.clientY;
+};
+
+document.onmouseup = () => {
+  isDown = false;
+};
+
+document.onmousemove = (event) => {
+  if (!isDown) {
+    return;
+  }
+
+  map.style.left = `${map.offsetLeft + (event.clientX - startX)}px`;
+  map.style.top = `${map.offsetTop + (event.clientY - startY)}px`;
+  startX = event.clientX;
+  startY = event.clientY;
+};
+
+init().catch((error) => {
+  document.body.innerHTML = `<p>Không tải được dữ liệu: ${error.message}</p>`;
+});
+</script>
+</body>
+</html>

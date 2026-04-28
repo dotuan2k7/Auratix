@@ -1,0 +1,395 @@
+/* GIAO DIỆN TỔNG THỂ DỰA TRÊN ADMIN PANEL */
+.app-container {
+    display: flex;
+    height: 100vh; /* Bắt buộc cao 100% màn hình */
+    width: 100%;
+    overflow: hidden; /* Không cho phép bất cứ thứ gì tràn ra khỏi khung này */
+}
+
+/* Khóa chặt trang web, cấm cuộn toàn trang */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* Cao đúng 100% màn hình hiển thị */
+    width: 100vw;  /* Rộng đúng 100% màn hình hiển thị */
+    overflow: hidden; /* Giấu mọi thanh cuộn thừa ở mép trình duyệt */
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    color: #333333; 
+}#333333
+
+/* Ép font cho các thẻ input và button (vì mặc định trình duyệt hay dùng font cũ cho 2 thẻ này) */
+input, button {
+    font-family: 'Inter', sans-serif;
+}
+
+.sidebar {
+    width: 260px;
+    background-color: #1a202c; /* Màu tối giống ảnh Admin */
+    color: #cbd5e0;
+    padding: 2rem 1.5rem;
+}
+
+.logo {
+    color: #4fd1c5;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+}
+
+.user-avatar-section {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #2d3748;
+}
+
+.user-avatar-section img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid #4fd1c5;
+}
+
+.nav-item {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    background: transparent;
+    border: none;
+    color: #a0aec0;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.nav-item:hover, .nav-item.active {
+    background-color: #2d3748;
+    color: white;
+}
+
+/* KHU VỰC NỘI DUNG */
+/* Khu vực nội dung bên phải */
+.main-content {
+    flex: 1; /* Chiếm toàn bộ không gian còn lại sau khi nhường chỗ cho Sidebar */
+    background-color: #f7fafc;
+    padding: 2rem;
+    
+    /* ĐÂY LÀ DÒNG QUAN TRỌNG NHẤT */
+    overflow-y: auto; /* Tự động hiện thanh cuộn DỌC khi nội dung quá dài */
+    overflow-x: hidden; /* Cấm cuộn NGANG để tránh vỡ giao diện */
+}
+.tab-pane { display: none; }
+.tab-pane.active { display: block; animation: fadeIn 0.5s; }
+
+.card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.form-group { margin-bottom: 1.5rem; }
+.form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+}
+
+/* THIẾT KẾ VÉ ĐIỆN TỬ (TICKET) */
+.ticket-card {
+    display: flex;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    border: 1px solid #edf2f7;
+}
+
+.ticket-left {
+    padding: 20px;
+    flex: 1;
+    border-right: 2px dashed #e2e8f0;
+    position: relative;
+}
+
+/* Hiệu ứng xẻ vé */
+.ticket-left::before, .ticket-left::after {
+    content: '';
+    position: absolute;
+    right: -10px;
+    width: 20px;
+    height: 20px;
+    background: #f7fafc;
+    border-radius: 50%;
+}
+.ticket-left::before { top: -10px; }
+.ticket-left::after { bottom: -10px; }
+
+.ticket-right {
+    width: 150px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+}
+
+.qr-mockup {
+    width: 100px;
+    height: 100px;
+    background: #f0f0f0; /* Giả lập QR bằng màu nền */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #999;
+}
+
+.btn-cancel {
+    margin-top: 10px;
+    background: #fff5f5;
+    color: #c53030;
+    border: 1px solid #feb2b2;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================
+   CSS CHO CÁC NÚT BẤM (BUTTONS)
+   ========================================== */
+
+/* Nút chính (Lưu thay đổi) - Nổi bật */
+.btn-primary {
+    background-color: #4fd1c5; /* Màu xanh ngọc theo tông của Event Hub */
+    color: #1a202c; /* Chữ màu xanh đen đậm */
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(79, 209, 197, 0.3); /* Đổ bóng nhẹ */
+    margin-top: 10px;
+}
+
+.btn-primary:hover {
+    background-color: #319795; /* Đậm hơn khi di chuột */
+    transform: translateY(-2px); /* Hiệu ứng nảy nút lên 1 chút */
+    box-shadow: 0 6px 15px rgba(79, 209, 197, 0.4);
+}
+
+/* Nút phụ (Cập nhật mật khẩu) - Trầm hơn */
+.btn-secondary {
+    background-color: #e2e8f0; /* Màu xám nhạt */
+    color: #4a5568; 
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn-secondary:hover {
+    background-color: #cbd5e0; /* Xám đậm hơn khi di chuột */
+    color: #1a202c;
+}
+
+/* ==========================================
+   GIAO DIỆN VÉ ĐIỆN TỬ (DARK MODE)
+   ========================================== */
+.dark-ticket {
+    display: flex;
+    background-color: #242731;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    color: white;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    max-width: 700px; /* Thêm giới hạn chiều rộng cho vé đỡ bị kéo giãn */
+}
+
+.ticket-accent { width: 12px; }
+
+.ticket-body {
+    flex: 1;
+    padding: 25px;
+}
+
+.ticket-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+    color: white;
+}
+
+.ticket-details {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 30px; /* Chia cột cho Ngày chiếu và Vị trí */
+}
+
+.detail-block { margin-bottom: 12px; }
+
+.detail-label {
+    font-size: 0.8rem;
+    color: #a0aec0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.detail-value {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-top: 4px;
+    color: white;
+}
+
+.ticket-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.ticket-rip {
+    width: 2px;
+    background-image: linear-gradient(to bottom, #4a5568 50%, transparent 50%);
+    background-size: 2px 15px;
+    position: relative;
+}
+
+.ticket-rip::before, .ticket-rip::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-color: #f0f2f5; /* Sửa màu này cho tiệp với nền ngoài cùng của web bạn */
+    border-radius: 50%;
+    left: -14px;
+}
+.ticket-rip::before { top: -15px; }
+.ticket-rip::after { bottom: -15px; }
+
+.ticket-qr-section {
+    width: 160px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.qr-mockup {
+    width: 80px;
+    height: 80px;
+    background: white;
+    color: #242731;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.btn-cancel-dark {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.85rem;
+    transition: 0.3s;
+}
+
+.btn-cancel-dark:hover {
+    background-color: #f56565; /* Đổi sang màu đỏ khi hover cho nguy hiểm */
+    color: white;
+    border-color: #f56565;
+}
+
+/* ==========================================
+   CSS CHO BẢNG THÔNG BÁO (CUSTOM MODAL)
+   ========================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Bôi mờ nền đen 60% */
+    backdrop-filter: blur(3px); /* Hiệu ứng kính mờ (kính lúp) siêu xịn */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999; /* Đảm bảo luôn nằm trên cùng */
+    
+    /* Mặc định ẩn đi */
+    opacity: 0; 
+    pointer-events: none; 
+    transition: opacity 0.3s ease;
+}
+
+/* Khi có class active thì hiện lên */
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-box {
+    background: #ffffff;
+    padding: 30px 40px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    
+    /* Hiệu ứng trượt từ dưới lên một chút */
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-box {
+    transform: translateY(0);
+}
+
+.modal-icon {
+    font-size: 3rem;
+    color: #4fd1c5;
+    margin-bottom: 15px;
+}
+
+.modal-box h3 { color: #1a202c; margin-bottom: 10px; font-size: 1.5rem; }
+.modal-box p { color: #4a5568; line-height: 1.5; margin-bottom: 25px; }
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* Thiết kế lại nút cho vừa vặn trong hộp */
+.modal-actions button { padding: 10px 25px; margin: 0; }
